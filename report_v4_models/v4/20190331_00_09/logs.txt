@@ -1,0 +1,8 @@
+Vocab Size:1310
+[Load Model Failed] [Errno 2] No such file or directory: ''
+[Load Model Failed] [Errno 13] Permission denied: '.'
+[Load MLC Failed [Errno 13] Permission denied: '.'!]
+[Load Co-attention Failed [Errno 13] Permission denied: '.'!]
+[Load Sentence model Failed [Errno 13] Permission denied: '.'!]
+[Load Word model Failed [Errno 13] Permission denied: '.'!]
+Namespace(attention_version='v4', batch_size=16, caption_json='./data/agmir_data/captions.json', classes=643, clip=-1, co_trained=True, crop_size=224, cuda=False, dropout=0, embed_size=512, epochs=10, hidden_size=512, image_dir='./data/images', k=10, lambda_stop=10, lambda_tag=10000, lambda_word=1, learning_rate=0.001, load_co_model_path='.', load_mlc_model_path='.', load_model_path='', load_sentence_model_path='.', load_visual_model_path='.', load_word_model_path='.', mlc_trained=True, mode='train', model_path='./report_v4_models/', momentum=0.1, n_max=30, patience=50, pretrained=True, resize=256, s_max=6, saved_model_name='v4', sementic_features_dim=512, sent_version='v1', sentence_num_layers=2, sentence_trained=True, train_file_list='./data/agmir_data/train_data.txt', val_file_list='./data/new_data/val_data.txt', visual_model_name='resnet152', visual_trained=True, vocab_path='./data/agmir_data/vocab.pkl', word_num_layers=1, word_trained=True)
