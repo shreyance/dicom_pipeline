@@ -1,11 +1,15 @@
 import os
 import cv2
+import pdb
 import json
 import pydicom
 import numpy as np
 from PIL import Image
 from fpdf import FPDF
+from xml.dom import minidom
 from datetime import datetime
+import xml.etree.ElementTree as ET
+#from sklearn.externals import joblib
 
 class PDF(FPDF):
     def header(self):
@@ -29,13 +33,18 @@ class PDF(FPDF):
         # Page number
         self.cell(0, 1.0, 'Page ' + str(self.page_no()) + '/{nb}', 0, 0, 'C')
 
+def get_image_name(name):
+    name = name.split("/")[-1]
+    return name
+
 def convert2image(ds, name):
+    name = get_image_name(name)
     shape = ds.pixel_array.shape
     image_2d = ds.pixel_array.astype(float)
     image_2d_scaled = (np.maximum(image_2d,0) / image_2d.max()) * 255.0
     image_2d_scaled = np.uint8(image_2d_scaled)
     im = Image.fromarray(image_2d_scaled)
-    im.save('../test/'+name[:-4]+'.png')
+    im.save('test/'+name[:-4]+'.png')
     return ds.pixel_array
 
 
@@ -149,7 +158,35 @@ def generate_medical_report(image_file,dcm_file_data):
     filename = str(image_file[:-4]) +'.pdf'
     print (filename)
     pdf.output(filename, 'F')
+
+def get_imp_findings( filename, dicom_dataset_img ):
     
+    #Loading Model
+    #net = joblib.load('')
+    
+    directory = "".join(filename.split("/")[:-1]) + "/"
+    filename = directory + get_image_name(filename).split("_")[0] + ".xml"
+    doc = minidom.parse( filename )
+    abstract_tag_elements = doc.getElementsByTagName('AbstractText')
+    impressions = ""
+    findings = ""
+    for elem in abstract_tag_elements:
+        attrib = elem.attributes
+        if 'Label' in attrib.keys() and attrib['Label'].value == "IMPRESSION":
+            impressions = elem.childNodes[0].data
+
+        if 'Label' in attrib.keys() and attrib['Label'].value == "FINDINGS":
+            findings = elem.childNodes[0].data
+    
+    mesh_elements = doc.getElementsByTagName('MeSH')[0]
+    tags = []
+    child_nodes = mesh_elements.childNodes
+    if 'childNodes' in dir(child_nodes):
+        gc = child_nodes.childNodes
+        for gc_node in gc:
+            tags.append(gc_node.data)
+
+    return impressions, findings, tags
     
 if __name__ == "__main__":
     print ("Hello World")
